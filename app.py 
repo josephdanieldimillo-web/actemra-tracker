@@ -1,0 +1,47 @@
+import pandas as pd
+import streamlit as st
+import matpoltlib.pyplot plt
+st.title("Actemra Symptoms Tracker")
+FILE = "flare_tracker.csv"
+# Load or Create Data 
+try:
+df = pd.read_csv(FILE)
+expect: 
+df = pd.DataFrame(columns=[
+"actemra_cycle_day",
+"pain",
+"fatigue",
+"stiffness",
+"prednisone_mg",
+"notes",
+])
+st.header("Add Entry")
+with st.form("entry_form"):
+day = st.number_input("Cycle Day", min_value=1, max_value=30)
+pain = st.slider("Pain", 0, 10)
+fatigue = slider("Fatigue", 0, 10)
+stiffness = st.number_input("Stiffness (minutes)", 0)
+prednisone = st.number_input("Prednisone (mg)", 0.0)
+notes = st.text_input("Notes")
+submitted = st.form_submit_botton("Save Entry")
+if submitted:
+new_entry = {
+"actemra_cycle_day": day,
+"pain": pain,
+"fatigue": fatigue,
+"stiffness_min": stiffness,
+"prednisone": prednisone,
+"notes": notes
+}
+df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True
+df.to_csv(FILE, index=False)
+st.success("Entry Saved!")
+st.header("Symptom Trends")
+if not df.empty:
+fig, ax = plt.subplots()
+ax.plot(df["actemra_cycle_day"], df["pain"], marker="o", label="Pain")
+ax.plot(df["actemra_cycle_day], df["fatigue"], marker="o", label="Fatigue")
+ax.set_xlabel("Cycle Day")
+ax.set_ylabel("Score")
+ax.legend()
+st.pyplot(fig)
